@@ -48,7 +48,7 @@ jobs:
           name: build
           allowUpdates: true
           tag: build
-          commit: main
+          commit: release
           replacesArtifacts: true
           token: ${{ secrets.TOKEN }}
           artifacts: ../clash/bin/*
