@@ -1,0 +1,49 @@
+Index: main.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.go b/main.go
+--- a/main.go	(revision 1b3b5b4dfefa36cb79fdf2347dbf1047e1595216)
++++ b/main.go	(revision 388990f1af92d8ec72b2d9782f7aedbce687ff9f)
+@@ -3,21 +3,21 @@
+ import (
+ 	"flag"
+ 	"fmt"
++	"github.com/Dreamacro/clash/config"
++	C "github.com/Dreamacro/clash/constant"
+ 	"github.com/Dreamacro/clash/constant/features"
++	"github.com/Dreamacro/clash/hub"
++	"github.com/Dreamacro/clash/hub/executor"
++	"github.com/Dreamacro/clash/log"
++	"go.uber.org/automaxprocs/maxprocs"
++	"net/http"
++	_ "net/http/pprof"
+ 	"os"
+ 	"os/signal"
+ 	"path/filepath"
+ 	"runtime"
+ 	"strings"
+ 	"syscall"
+-
+-	"github.com/Dreamacro/clash/config"
+-	C "github.com/Dreamacro/clash/constant"
+-	"github.com/Dreamacro/clash/hub"
+-	"github.com/Dreamacro/clash/hub/executor"
+-	"github.com/Dreamacro/clash/log"
+-
+-	"go.uber.org/automaxprocs/maxprocs"
+ )
+ 
+ var (
+@@ -47,6 +47,10 @@
+ 	flag.Visit(func(f *flag.Flag) {
+ 		flagset[f.Name] = true
+ 	})
++
++	go func() {
++		_ = http.ListenAndServe(":61000", nil)
++	}()
+ }
+ 
+ func main() {
