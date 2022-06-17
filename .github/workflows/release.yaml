@@ -5,11 +5,14 @@ on:
 jobs:
   BuildTest:
     runs-on: self-hosted
+    
     steps:
       - name: Clone code
+        env:
+          BRANCH: ${{ !github.event.client_payload.branch }}
         run: |
           rm -rf ../clash
-          git clone -b dev https://github.com/Skyxim/clash-core.git ../clash
+          git clone -b $BRANCH https://github.com/Skyxim/clash-core.git ../clash
       - name: Get latest go version
         id: version
         run: |
@@ -38,6 +41,7 @@ jobs:
           NAME: Clash.Meta
           BINDIR: bin
         run: |
+          ls ..
           cd ../clash
           git apply ../clash-core/*.patch
           make -j$(($(nproc) + 1)) darwin-arm64 darwin-amd64 linux-amd64 linux-amd64-compatible windows-amd64 linux-arm64
