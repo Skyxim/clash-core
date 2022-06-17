@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Clone code
         env:
-          BRANCH: ${{ !github.event.client_payload.branch }}
+          BRANCH: ${{ github.event.client_payload.branch }}
         run: |
           rm -rf ../clash
           git clone -b $BRANCH https://github.com/Skyxim/clash-core.git ../clash
