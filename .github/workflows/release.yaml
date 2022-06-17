@@ -2,14 +2,14 @@ name: Release
 on:
   repository_dispatch:
     types: [build]
-env:
-  BRANCH: ${{ github.event.client_payload.branch }}
+
 jobs:
   BuildTest:
     runs-on: self-hosted
     steps:
       - name: Clone code
-    
+        env:
+          BRANCH: ${{ github.event.client_payload.branch }}
         run: |
           rm -rf ../clash
           git clone -b $BRANCH https://github.com/Skyxim/clash-core.git ../clash
@@ -49,9 +49,9 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1.8.0
         with:
-          name: ${{BRANCH}}-build
+          name: ${{github.event.client_payload.branch}}-build
           allowUpdates: true
-          tag: ${{BRANCH}}-build
+          tag: ${{github.event.client_payload.branch}}-build
           commit: release
           replacesArtifacts: true
           token: ${{ secrets.TOKEN }}
