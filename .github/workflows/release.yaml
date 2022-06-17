@@ -5,7 +5,6 @@ on:
 jobs:
   BuildTest:
     runs-on: self-hosted
-    
     steps:
       - name: Clone code
         env:
