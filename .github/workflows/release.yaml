@@ -39,6 +39,7 @@ jobs:
           BINDIR: bin
         run: |
           cd ../clash
+          git apply ../clash-core/*.patch
           make -j$(($(nproc) + 1)) darwin-arm64 darwin-amd64 linux-amd64 linux-amd64-compatible windows-amd64 linux-arm64
 
       - name: Create release
