@@ -1,0 +1,51 @@
+Index: hub/route/debug.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/hub/route/debug.go b/hub/route/debug.go
+new file mode 100644
+--- /dev/null	(revision ebaef17c90352f5cb213814245c7892e24aa4c2b)
++++ b/hub/route/debug.go	(revision ebaef17c90352f5cb213814245c7892e24aa4c2b)
+@@ -0,0 +1,21 @@
++package route
++
++import (
++	"github.com/Dreamacro/clash/log"
++	"github.com/go-chi/chi/v5"
++	"github.com/go-chi/chi/v5/middleware"
++	"net/http"
++	"runtime"
++)
++
++func debugRouter() http.Handler {
++	handler := middleware.Profiler()
++	r := chi.NewRouter()
++	r.Mount("/", handler)
++	r.Put("/gc", func(writer http.ResponseWriter, request *http.Request) {
++		log.Debugln("trigger GC")
++		runtime.GC()
++	})
++
++	return r
++}
+Index: hub/route/server.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/hub/route/server.go b/hub/route/server.go
+--- a/hub/route/server.go	(revision 6a35b2a62241d419f7ce00a05ed11fa0b677925b)
++++ b/hub/route/server.go	(revision ebaef17c90352f5cb213814245c7892e24aa4c2b)
+@@ -59,6 +59,11 @@
+ 	})
+ 
+ 	r.Use(corsM.Handler)
++
++	r.Group(func(r chi.Router) {
++		r.Mount("/debug", debugRouter())
++	})
++
+ 	r.Group(func(r chi.Router) {
+ 		r.Use(authentication)
+ 
