@@ -1,6 +1,7 @@
 package mixed
 
 import (
+	"context"
 	"net"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/Dreamacro/clash/listener/socks"
 	"github.com/Dreamacro/clash/transport/socks4"
 	"github.com/Dreamacro/clash/transport/socks5"
+	"github.com/database64128/tfo-go"
 )
 
 type Listener struct {
@@ -36,8 +38,11 @@ func (l *Listener) Close() error {
 	return l.listener.Close()
 }
 
-func New(addr string, in chan<- C.ConnContext) (*Listener, error) {
-	l, err := net.Listen("tcp", addr)
+func New(addr string, inboundTfo bool, in chan<- C.ConnContext) (*Listener, error) {
+	lc := tfo.ListenConfig{
+		DisableTFO: !inboundTfo,
+	}
+	l, err := lc.Listen(context.Background(), "tcp", addr)
 	if err != nil {
 		return nil, err
 	}

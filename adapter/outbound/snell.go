@@ -30,6 +30,7 @@ type SnellOption struct {
 	UDP      bool           `proxy:"udp,omitempty"`
 	Version  int            `proxy:"version,omitempty"`
 	ObfsOpts map[string]any `proxy:"obfs-opts,omitempty"`
+	TFO      bool           `proxy:"tfo,omitempty"`
 }
 
 type streamOption struct {
@@ -158,6 +159,7 @@ func NewSnell(option SnellOption) (*Snell, error) {
 			udp:   option.UDP,
 			iface: option.Interface,
 			rmark: option.RoutingMark,
+			tfo:   option.TFO,
 		},
 		psk:        psk,
 		obfsOption: obfsOption,

@@ -53,6 +53,7 @@ type VmessOption struct {
 	WSOpts              WSOptions    `proxy:"ws-opts,omitempty"`
 	PacketAddr          bool         `proxy:"packet-addr,omitempty"`
 	AuthenticatedLength bool         `proxy:"authenticated-length,omitempty"`
+	TFO                 bool         `proxy:"tfo,omitempty"`
 }
 
 type HTTPOptions struct {
@@ -322,6 +323,7 @@ func NewVmess(option VmessOption) (*Vmess, error) {
 			udp:   option.UDP,
 			iface: option.Interface,
 			rmark: option.RoutingMark,
+			tfo:   option.TFO,
 		},
 		client: client,
 		option: &option,

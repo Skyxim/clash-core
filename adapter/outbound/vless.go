@@ -58,6 +58,7 @@ type VlessOption struct {
 	SkipCertVerify bool              `proxy:"skip-cert-verify,omitempty"`
 	Fingerprint    string            `proxy:"fingerprint,omitempty"`
 	ServerName     string            `proxy:"servername,omitempty"`
+	TFO            bool              `proxy:"tfo,omitempty"`
 }
 
 func (v *Vless) StreamConn(c net.Conn, metadata *C.Metadata) (net.Conn, error) {
@@ -423,6 +424,7 @@ func NewVless(option VlessOption) (*Vless, error) {
 			tp:    C.Vless,
 			udp:   option.UDP,
 			iface: option.Interface,
+			tfo:   option.TFO,
 		},
 		client: client,
 		option: &option,
