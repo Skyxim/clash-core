@@ -103,6 +103,7 @@ func (b *Base) DialOptions(opts ...dialer.Option) []dialer.Option {
 	if b.rmark != 0 {
 		opts = append(opts, dialer.WithRoutingMark(b.rmark))
 	}
+
 	opts = append(opts, dialer.WithTFO(b.tfo))
 
 	return opts

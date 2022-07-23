@@ -309,7 +309,6 @@ func updateGeneral(general *config.General, force bool) {
 	}
 
 	dialer.DefaultRoutingMark.Store(int32(general.RoutingMark))
-	dialer.DefaultTFO.Store(general.OutboundTfo)
 	if general.RoutingMark > 0 {
 		log.Infoln("Use routing mark: %#x", general.RoutingMark)
 	}

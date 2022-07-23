@@ -55,7 +55,6 @@ type General struct {
 	EnableProcess bool         `json:"enable-process"`
 	Tun           Tun          `json:"tun"`
 	Sniffing      bool         `json:"sniffing"`
-	OutboundTfo   bool         `json:"outbound-tfo"`
 }
 
 // Inbound config
@@ -441,7 +440,6 @@ func parseGeneral(cfg *RawConfig) (*General, error) {
 		IPv6:          cfg.IPv6,
 		Interface:     cfg.Interface,
 		RoutingMark:   cfg.RoutingMark,
-		OutboundTfo:   cfg.OutboundTfo,
 		GeodataMode:   cfg.GeodataMode,
 		GeodataLoader: cfg.GeodataLoader,
 		TCPConcurrent: cfg.TCPConcurrent,

@@ -32,9 +32,6 @@ func DialContext(ctx context.Context, network, address string, options ...Option
 	for _, o := range options {
 		o(opt)
 	}
-	if !opt.tfo {
-		opt.tfo = DefaultTFO.Load()
-	}
 
 	switch network {
 	case "tcp4", "tcp6", "udp4", "udp6":
@@ -101,24 +98,29 @@ func GetDial() bool {
 }
 
 func dialContext(ctx context.Context, network string, destination netip.Addr, port string, opt *option) (net.Conn, error) {
-	dialer := &net.Dialer{}
+	tfoDialer := tfo.Dialer{
+		DisableTFO: !opt.tfo,
+	}
+
 	if opt.interfaceName != "" {
-		if err := bindIfaceToDialer(opt.interfaceName, dialer, network, destination); err != nil {
+		if err := bindIfaceToDialer(opt.interfaceName, &tfoDialer.Dialer, network, destination); err != nil {
 			return nil, err
 		}
 	}
 	if opt.routingMark != 0 {
-		bindMarkToDialer(opt.routingMark, dialer, network, destination)
+		bindMarkToDialer(opt.routingMark, &tfoDialer.Dialer, network, destination)
 	}
 
 	if DisableIPv6 && destination.Is6() {
 		return nil, fmt.Errorf("IPv6 is diabled, dialer cancel")
 	}
 
-	tfoDialer := tfo.Dialer{
-		DisableTFO: !opt.tfo,
+	conn, err := tfoDialer.DialContext(ctx, network, net.JoinHostPort(destination.String(), port))
+	if err == tfo.ErrPlatformUnsupported {
+		err = nil
 	}
-	return tfoDialer.DialContext(ctx, network, net.JoinHostPort(destination.String(), port))
+
+	return conn, err
 }
 
 func dualStackDialContext(ctx context.Context, network, address string, opt *option) (net.Conn, error) {
